@@ -1,0 +1,2 @@
+﻿Console.WriteLine("Mapping objects with precision fine,\r\nIn code, their pathways intertwine.\r\nFrom one to another they seamlessly flow,\r\nObject to object, a dance they show.\r\nAttributes matched, values aligned,\r\nIn the realm of mapping, mastery defined.");
+Console.ReadKey();
