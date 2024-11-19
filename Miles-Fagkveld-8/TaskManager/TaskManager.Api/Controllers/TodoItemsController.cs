@@ -45,23 +45,14 @@ namespace TaskManager.Api.Controllers
                 return BadRequest();
             }
 
+            if (!TodoItemExists(id))
+            {
+                return NotFound();
+            }
+
             context.Entry(todoItem).State = EntityState.Modified;
 
-            try
-            {
-                await context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TodoItemExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await context.SaveChangesAsync();
 
             return NoContent();
         }
