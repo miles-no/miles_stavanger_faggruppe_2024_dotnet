@@ -1,57 +1,55 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TaskManager.Api.Data;
+﻿// File: TaskManager.Api/Controllers/CommentsController.cs
+using Microsoft.AspNetCore.Mvc;
 using TaskManager.Api.Models;
 
 namespace TaskManager.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CommentsController(TaskManagerContext context) : ControllerBase
+    public class CommentsController(ICommentService commentService) : ControllerBase
     {
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
         {
-            return await context.Comments.ToListAsync();
+            var comments = await commentService.GetCommentsAsync();
+            return Ok(comments);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Comment>> GetComment(int id)
         {
-            var comment = await context.Comments.FindAsync(id);
+            var comment = await commentService.GetCommentAsync(id);
 
             if (comment == null)
             {
                 return NotFound();
             }
 
-            return comment;
+            return Ok(comment);
         }
 
         [HttpPost]
         public async Task<ActionResult<Comment>> PostComment(Comment comment)
         {
-            context.Comments.Add(comment);
-            await context.SaveChangesAsync();
-
+            await commentService.AddCommentAsync(comment);
             return CreatedAtAction(nameof(GetComment), new { id = comment.Id }, comment);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> PutComment(int id, Comment comment)
         {
-            if (id != comment.Id)
+            try
+            {
+                await commentService.UpdateCommentAsync(id, comment);
+            }
+            catch (ArgumentException)
             {
                 return BadRequest();
             }
-
-            if (!CommentExists(id))
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-
-            context.Entry(comment).State = EntityState.Modified;
-            await context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -59,21 +57,16 @@ namespace TaskManager.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteComment(int id)
         {
-            var comment = await context.Comments.FindAsync(id);
-            if (comment == null)
+            try
+            {
+                await commentService.DeleteCommentAsync(id);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
 
-            context.Comments.Remove(comment);
-            await context.SaveChangesAsync();
-
             return NoContent();
-        }
-
-        private bool CommentExists(int id)
-        {
-            return context.Comments.Any(e => e.Id == id);
         }
     }
 }

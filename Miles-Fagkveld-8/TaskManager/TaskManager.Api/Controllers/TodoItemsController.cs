@@ -1,39 +1,37 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TaskManager.Api.Data;
 using TaskManager.Api.Models;
+using TaskManager.Api.Services;
 
 namespace TaskManager.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TodoItemsController(TaskManagerContext context) : ControllerBase
+    public class TodoItemsController(ITodoItemService service) : ControllerBase
     {
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItems()
         {
-            return await context.TodoItems.ToListAsync();
+            var items = await service.GetTodoItemsAsync();
+            return Ok(items);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoItem>> GetToDoItem(int id)
         {
-            var toDoItem = await context.TodoItems.FindAsync(id);
+            var toDoItem = await service.GetTodoItemAsync(id);
 
             if (toDoItem == null)
             {
                 return NotFound();
             }
 
-            return toDoItem;
+            return Ok(toDoItem);
         }
 
         [HttpPost]
         public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
         {
-            context.TodoItems.Add(todoItem);
-            await context.SaveChangesAsync();
-
+            await service.AddTodoItemAsync(todoItem);
             return CreatedAtAction(nameof(GetToDoItem), new { id = todoItem.Id }, todoItem);
         }
 
@@ -45,36 +43,25 @@ namespace TaskManager.Api.Controllers
                 return BadRequest();
             }
 
-            if (!TodoItemExists(id))
+            if (!await service.TodoItemExistsAsync(id))
             {
                 return NotFound();
             }
 
-            context.Entry(todoItem).State = EntityState.Modified;
-
-            await context.SaveChangesAsync();
-
+            await service.UpdateTodoItemAsync(todoItem);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTodoItem(int id)
         {
-            var toDoItem = await context.TodoItems.FindAsync(id);
-            if (toDoItem == null)
+            if (!await service.TodoItemExistsAsync(id))
             {
                 return NotFound();
             }
 
-            context.TodoItems.Remove(toDoItem);
-            await context.SaveChangesAsync();
-
+            await service.DeleteTodoItemAsync(id);
             return NoContent();
-        }
-
-        private bool TodoItemExists(int id)
-        {
-            return context.TodoItems.Any(e => e.Id == id);
         }
     }
 }

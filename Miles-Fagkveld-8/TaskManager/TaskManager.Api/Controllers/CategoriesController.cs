@@ -1,57 +1,55 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TaskManager.Api.Data;
 using TaskManager.Api.Models;
+using TaskManager.Api.Services;
 
 namespace TaskManager.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController(TaskManagerContext context) : ControllerBase
+    public class CategoriesController(ICategoryService categoryService) : ControllerBase
     {
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
         {
-            return await context.Categories.ToListAsync();
+            var categories = await categoryService.GetCategoriesAsync();
+            return Ok(categories);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
-            var category = await context.Categories.FindAsync(id);
+            var category = await categoryService.GetCategoryByIdAsync(id);
 
             if (category == null)
             {
                 return NotFound();
             }
 
-            return category;
+            return Ok(category);
         }
 
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
-            context.Categories.Add(category);
-            await context.SaveChangesAsync();
-
+            await categoryService.AddCategoryAsync(category);
             return CreatedAtAction(nameof(GetCategory), new { id = category.Id }, category);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCategory(int id, Category category)
         {
-            if (id != category.Id)
+            try
+            {
+                await categoryService.UpdateCategoryAsync(id, category);
+            }
+            catch (ArgumentException)
             {
                 return BadRequest();
             }
-
-            if (!CategoryExists(id))
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-
-            context.Entry(category).State = EntityState.Modified;
-            await context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -59,21 +57,16 @@ namespace TaskManager.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            var category = await context.Categories.FindAsync(id);
-            if (category == null)
+            try
+            {
+                await categoryService.DeleteCategoryAsync(id);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
 
-            context.Categories.Remove(category);
-            await context.SaveChangesAsync();
-
             return NoContent();
-        }
-
-        private bool CategoryExists(int id)
-        {
-            return context.Categories.Any(e => e.Id == id);
         }
     }
 }
