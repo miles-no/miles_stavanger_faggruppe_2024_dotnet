@@ -1,5 +1,4 @@
-﻿// File: TaskManager.Api/Controllers/CommentsController.cs
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TaskManager.Api.Models;
 using TaskManager.Api.Services;
 
@@ -17,7 +16,7 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Comment>> GetComment(int id)
+        public async Task<ActionResult<Comment>> GetComment(Guid id)
         {
             var comment = await commentService.GetCommentAsync(id);
 
@@ -30,14 +29,14 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Comment>> PostComment(int todoListItemId, Comment comment)
+        public async Task<ActionResult<Comment>> PostComment(int todoListItemId, CreateComment comment)
         {
             await commentService.AddCommentAsync(todoListItemId, comment);
-            return CreatedAtAction(nameof(GetComment), new { id = comment.Id }, comment);
+            return Ok(comment);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutComment(int id, Comment comment)
+        public async Task<IActionResult> PutComment(Guid id, Comment comment)
         {
             try
             {
@@ -56,7 +55,7 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteComment(int id)
+        public async Task<IActionResult> DeleteComment(Guid id)
         {
             try
             {

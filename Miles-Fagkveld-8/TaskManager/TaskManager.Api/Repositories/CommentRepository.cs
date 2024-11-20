@@ -6,12 +6,12 @@ namespace TaskManager.Api.Repositories;
 public class CommentRepository(TaskManagerContext context) : ICommentRepository
 {
 
-    public async Task<IEnumerable<CommentDto>> GetCommentsAsync(int todoListItemId)
+    public async Task<IEnumerable<CommentDto>> GetCommentsAsync(int todoItemId)
     {
-        return await context.Comments.Where(c => c.TodoListItemId == todoListItemId).ToListAsync();
+        return await context.Comments.Where(c => c.TodoListItemId == todoItemId).ToListAsync();
     }
 
-    public async Task<CommentDto> GetCommentAsync(int id)
+    public async Task<CommentDto> GetCommentAsync(Guid id)
     {
         return await context.Comments.FindAsync(id);
     }
@@ -28,7 +28,7 @@ public class CommentRepository(TaskManagerContext context) : ICommentRepository
         await context.SaveChangesAsync();
     }
 
-    public async Task DeleteCommentAsync(int id)
+    public async Task DeleteCommentAsync(Guid id)
     {
         var comment = await context.Comments.FindAsync(id);
         if (comment != null)
@@ -38,7 +38,7 @@ public class CommentRepository(TaskManagerContext context) : ICommentRepository
         }
     }
 
-    public async Task<bool> CommentExistsAsync(int id)
+    public async Task<bool> CommentExistsAsync(Guid id)
     {
         return await context.Comments.AnyAsync(e => e.Id == id);
     }

@@ -17,7 +17,7 @@ namespace TaskManager.Api.Services
             });
         }
 
-        public async Task<Comment> GetCommentAsync(int id)
+        public async Task<Comment> GetCommentAsync(Guid id)
         {
             var commentDto = await commentRepository.GetCommentAsync(id);
             return new Comment
@@ -28,11 +28,11 @@ namespace TaskManager.Api.Services
             };
         }
 
-        public async Task AddCommentAsync(int todoListItemId, Comment comment)
+        public async Task AddCommentAsync(int todoListItemId, CreateComment comment)
         {
             var commentDto = new CommentDto
             {
-                Id = comment.Id,
+                Id = Guid.NewGuid(),
                 Text = comment.Text,
                 TodoListItemId = todoListItemId
             };
@@ -40,7 +40,7 @@ namespace TaskManager.Api.Services
             await commentRepository.AddCommentAsync(commentDto);
         }
 
-        public async Task UpdateCommentAsync(int id, Comment comment)
+        public async Task UpdateCommentAsync(Guid id, Comment comment)
         {
             if (id != comment.Id)
             {
@@ -62,7 +62,7 @@ namespace TaskManager.Api.Services
             await commentRepository.UpdateCommentAsync(commentDto);
         }
 
-        public async Task DeleteCommentAsync(int id)
+        public async Task DeleteCommentAsync(Guid id)
         {
             if (!await commentRepository.CommentExistsAsync(id))
             {

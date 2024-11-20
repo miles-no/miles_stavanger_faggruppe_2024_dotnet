@@ -10,7 +10,7 @@ namespace TaskManager.Api.Repositories
             return await context.Categories.ToListAsync();
         }
 
-        public async Task<CategoryDto> GetCategoryByIdAsync(int id)
+        public async Task<CategoryDto> GetCategoryByIdAsync(Guid id)
         {
             return await context.Categories.FindAsync(id);
         }
@@ -27,7 +27,7 @@ namespace TaskManager.Api.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task DeleteCategoryAsync(int id)
+        public async Task DeleteCategoryAsync(Guid id)
         {
             var CategoryDto = await context.Categories.FindAsync(id);
             if (CategoryDto != null)
@@ -37,7 +37,7 @@ namespace TaskManager.Api.Repositories
             }
         }
 
-        public async Task<bool> CategoryExistsAsync(int id)
+        public async Task<bool> CategoryExistsAsync(Guid id)
         {
             return await context.Categories.AnyAsync(e => e.Id == id);
         }

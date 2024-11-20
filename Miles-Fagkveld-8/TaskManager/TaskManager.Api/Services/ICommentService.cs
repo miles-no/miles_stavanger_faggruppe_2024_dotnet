@@ -5,8 +5,8 @@
    public interface ICommentService
    {
        Task<IEnumerable<Comment>> GetCommentsAsync(int todoListItemId);
-       Task<Comment> GetCommentAsync(int id);
-       Task AddCommentAsync(int todoListItemId, Comment comment);
-       Task UpdateCommentAsync(int id, Comment comment);
-       Task DeleteCommentAsync(int id);
+       Task<Comment> GetCommentAsync(Guid id);
+       Task AddCommentAsync(int todoListItemId, CreateComment comment);
+       Task UpdateCommentAsync(Guid id, Comment comment);
+       Task DeleteCommentAsync(Guid id);
    }

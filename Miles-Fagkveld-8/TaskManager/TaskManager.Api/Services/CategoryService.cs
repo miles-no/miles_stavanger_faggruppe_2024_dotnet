@@ -17,7 +17,7 @@ namespace TaskManager.Api.Services
             });
         }
 
-        public async Task<Category> GetCategoryByIdAsync(int id)
+        public async Task<Category> GetCategoryByIdAsync(Guid id)
         {
             var categoryDto = await categoryRepository.GetCategoryByIdAsync(id);
             return new Category
@@ -28,18 +28,18 @@ namespace TaskManager.Api.Services
             };
         }
 
-        public async Task AddCategoryAsync(Category category)
+        public async Task AddCategoryAsync(CreateCategory category)
         {
             var categoryDto = new CategoryDto
             {
-                Id = category.Id,
+                Id = Guid.NewGuid(),
                 Name = category.Name
                 // Map other properties as needed
             };
             await categoryRepository.AddCategoryAsync(categoryDto);
         }
 
-        public async Task UpdateCategoryAsync(int id, Category category)
+        public async Task UpdateCategoryAsync(Guid id, Category category)
         {
             if (id != category.Id)
             {
@@ -61,7 +61,7 @@ namespace TaskManager.Api.Services
             await categoryRepository.UpdateCategoryAsync(categoryDto);
         }
 
-        public async Task DeleteCategoryAsync(int id)
+        public async Task DeleteCategoryAsync(Guid id)
         {
             if (!await categoryRepository.CategoryExistsAsync(id))
             {

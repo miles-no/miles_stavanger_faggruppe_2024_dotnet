@@ -16,7 +16,7 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetCategory(int id)
+        public async Task<ActionResult<Category>> GetCategory(Guid id)
         {
             var category = await categoryService.GetCategoryByIdAsync(id);
 
@@ -29,14 +29,14 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Category>> PostCategory(Category category)
+        public async Task<ActionResult<Category>> PostCategory(CreateCategory category)
         {
             await categoryService.AddCategoryAsync(category);
-            return CreatedAtAction(nameof(GetCategory), new { id = category.Id }, category);
+            return Ok(category);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(int id, Category category)
+        public async Task<IActionResult> PutCategory(Guid id, Category category)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCategory(int id)
+        public async Task<IActionResult> DeleteCategory(Guid id)
         {
             try
             {

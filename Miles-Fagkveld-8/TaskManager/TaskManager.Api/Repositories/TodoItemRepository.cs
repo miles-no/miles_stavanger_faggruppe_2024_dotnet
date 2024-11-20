@@ -7,7 +7,7 @@ namespace TaskManager.Api.Repositories
     {
         public async Task<IEnumerable<TodoItemDto>> GetTodoItemsAsync()
         {
-            return await context.TodoItems.ToListAsync();
+            return await context.TodoItems.Include(t => t.Category).ToListAsync();
         }
 
         public async Task<TodoItemDto> GetTodoItemAsync(int id)

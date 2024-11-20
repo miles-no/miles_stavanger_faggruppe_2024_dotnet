@@ -6,10 +6,10 @@ namespace TaskManager.Api.Services
     public interface ICategoryService
     {
         Task<IEnumerable<Category>> GetCategoriesAsync();
-        Task<Category> GetCategoryByIdAsync(int id);
-        Task AddCategoryAsync(Category category);
-        Task UpdateCategoryAsync(int id, Category category);
-        Task DeleteCategoryAsync(int id);
+        Task<Category> GetCategoryByIdAsync(Guid id);
+        Task AddCategoryAsync(CreateCategory category);
+        Task UpdateCategoryAsync(Guid id, Category category);
+        Task DeleteCategoryAsync(Guid id);
     }
 }
 

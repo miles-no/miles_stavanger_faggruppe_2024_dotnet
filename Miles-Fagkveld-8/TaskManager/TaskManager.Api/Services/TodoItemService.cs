@@ -35,7 +35,8 @@ namespace TaskManager.Api.Services
             {
                 Id = todoItem.Id,
                 Name = todoItem.Name,
-                IsComplete = todoItem.IsComplete
+                IsComplete = todoItem.IsComplete,
+                CategoryId = todoItem.CategoryId
             };
             await repository.AddTodoItemAsync(dto);
         }

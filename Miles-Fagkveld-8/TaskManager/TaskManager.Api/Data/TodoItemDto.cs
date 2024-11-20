@@ -6,6 +6,7 @@ namespace TaskManager.Api.Data
         public string Name { get; set; } = string.Empty;
         public bool IsComplete { get; set; }
         public CategoryDto? Category { get; set; }
+        public Guid? CategoryId { get; set; }
         public List<CommentDto>? Comments { get; set; }
     }
 }
