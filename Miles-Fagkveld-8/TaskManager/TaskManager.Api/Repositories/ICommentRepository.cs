@@ -1,13 +1,14 @@
-   // File: TaskManager.Api/Repositories/ICommentRepository.cs
-   using TaskManager.Api.Models;
+using TaskManager.Api.Data;
 
-   public interface ICommentRepository
-   {
-       Task<IEnumerable<Comment>> GetCommentsAsync();
-       Task<Comment> GetCommentAsync(int id);
-       Task AddCommentAsync(Comment comment);
-       Task UpdateCommentAsync(Comment comment);
-       Task DeleteCommentAsync(int id);
-       Task<bool> CommentExistsAsync(int id);
-   }
-   
+namespace TaskManager.Api.Repositories;
+
+public interface ICommentRepository
+{
+
+    Task<IEnumerable<CommentDto>> GetCommentsAsync(int todoListItemId);
+    Task<CommentDto> GetCommentAsync(int id);
+    Task AddCommentAsync(CommentDto comment);
+    Task UpdateCommentAsync(CommentDto comment);
+    Task DeleteCommentAsync(int id);
+    Task<bool> CommentExistsAsync(int id);
+}

@@ -1,6 +1,7 @@
 ﻿// File: TaskManager.Api/Controllers/CommentsController.cs
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.Api.Models;
+using TaskManager.Api.Services;
 
 namespace TaskManager.Api.Controllers
 {
@@ -9,9 +10,9 @@ namespace TaskManager.Api.Controllers
     public class CommentsController(ICommentService commentService) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
+        public async Task<ActionResult<IEnumerable<Comment>>> GetComments(int todoListItemId)
         {
-            var comments = await commentService.GetCommentsAsync();
+            var comments = await commentService.GetCommentsAsync(todoListItemId);
             return Ok(comments);
         }
 
@@ -29,9 +30,9 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Comment>> PostComment(Comment comment)
+        public async Task<ActionResult<Comment>> PostComment(int todoListItemId, Comment comment)
         {
-            await commentService.AddCommentAsync(comment);
+            await commentService.AddCommentAsync(todoListItemId, comment);
             return CreatedAtAction(nameof(GetComment), new { id = comment.Id }, comment);
         }
 

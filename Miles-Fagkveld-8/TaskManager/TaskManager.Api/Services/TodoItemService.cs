@@ -1,3 +1,4 @@
+using TaskManager.Api.Data;
 using TaskManager.Api.Models;
 using TaskManager.Api.Repositories;
 
@@ -7,22 +8,47 @@ namespace TaskManager.Api.Services
     {
         public async Task<IEnumerable<TodoItem>> GetTodoItemsAsync()
         {
-            return await repository.GetTodoItemsAsync();
+            var todoItemDtos = await repository.GetTodoItemsAsync();
+            return todoItemDtos.Select(dto => new TodoItem
+            {
+                Id = dto.Id,
+                Name = dto.Name,
+                IsComplete = dto.IsComplete,
+                CategoryId = dto.Category?.Id,
+            });
         }
 
         public async Task<TodoItem> GetTodoItemAsync(int id)
         {
-            return await repository.GetTodoItemAsync(id);
+            var dto = await repository.GetTodoItemAsync(id);
+            return new TodoItem
+            {
+                Id = dto.Id,
+                Name = dto.Name,
+                IsComplete = dto.IsComplete
+            };
         }
 
         public async Task AddTodoItemAsync(TodoItem todoItem)
         {
-            await repository.AddTodoItemAsync(todoItem);
+            var dto = new TodoItemDto
+            {
+                Id = todoItem.Id,
+                Name = todoItem.Name,
+                IsComplete = todoItem.IsComplete
+            };
+            await repository.AddTodoItemAsync(dto);
         }
 
         public async Task UpdateTodoItemAsync(TodoItem todoItem)
         {
-            await repository.UpdateTodoItemAsync(todoItem);
+            var dto = new TodoItemDto
+            {
+                Id = todoItem.Id,
+                Name = todoItem.Name,
+                IsComplete = todoItem.IsComplete
+            };
+            await repository.UpdateTodoItemAsync(dto);
         }
 
         public async Task DeleteTodoItemAsync(int id)

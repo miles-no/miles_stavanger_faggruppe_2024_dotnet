@@ -1,46 +1,75 @@
-   // File: TaskManager.Api/Services/CommentService.cs
-   using TaskManager.Api.Models;
+using TaskManager.Api.Data;
+using TaskManager.Api.Models;
+using TaskManager.Api.Repositories;
 
-   public class CommentService(ICommentRepository commentRepository) : ICommentService
-   {
-       public async Task<IEnumerable<Comment>> GetCommentsAsync()
-       {
-           return await commentRepository.GetCommentsAsync();
-       }
+namespace TaskManager.Api.Services
+{
+    public class CommentService(ICommentRepository commentRepository) : ICommentService
+    {
+        public async Task<IEnumerable<Comment>> GetCommentsAsync(int todoListItemId)
+        {
+            var commentDtos = await commentRepository.GetCommentsAsync(todoListItemId);
+            return commentDtos.Select(dto => new Comment
+            {
+                Id = dto.Id,
+                Text = dto.Text
+                // Map other properties as needed
+            });
+        }
 
-       public async Task<Comment> GetCommentAsync(int id)
-       {
-           return await commentRepository.GetCommentAsync(id);
-       }
+        public async Task<Comment> GetCommentAsync(int id)
+        {
+            var commentDto = await commentRepository.GetCommentAsync(id);
+            return new Comment
+            {
+                Id = commentDto.Id,
+                Text = commentDto.Text
+                // Map other properties as needed
+            };
+        }
 
-       public async Task AddCommentAsync(Comment comment)
-       {
-           await commentRepository.AddCommentAsync(comment);
-       }
+        public async Task AddCommentAsync(int todoListItemId, Comment comment)
+        {
+            var commentDto = new CommentDto
+            {
+                Id = comment.Id,
+                Text = comment.Text,
+                TodoListItemId = todoListItemId
+            };
 
-       public async Task UpdateCommentAsync(int id, Comment comment)
-       {
-           if (id != comment.Id)
-           {
-               throw new ArgumentException("ID mismatch");
-           }
+            await commentRepository.AddCommentAsync(commentDto);
+        }
 
-           if (!await commentRepository.CommentExistsAsync(id))
-           {
-               throw new KeyNotFoundException("Comment not found");
-           }
+        public async Task UpdateCommentAsync(int id, Comment comment)
+        {
+            if (id != comment.Id)
+            {
+                throw new ArgumentException("ID mismatch");
+            }
 
-           await commentRepository.UpdateCommentAsync(comment);
-       }
+            if (!await commentRepository.CommentExistsAsync(id))
+            {
+                throw new KeyNotFoundException("Comment not found");
+            }
 
-       public async Task DeleteCommentAsync(int id)
-       {
-           if (!await commentRepository.CommentExistsAsync(id))
-           {
-               throw new KeyNotFoundException("Comment not found");
-           }
+            var commentDto = new CommentDto
+            {
+                Id = comment.Id,
+                Text = comment.Text
+                // Map other properties as needed
+            };
 
-           await commentRepository.DeleteCommentAsync(id);
-       }
-   }
-   
+            await commentRepository.UpdateCommentAsync(commentDto);
+        }
+
+        public async Task DeleteCommentAsync(int id)
+        {
+            if (!await commentRepository.CommentExistsAsync(id))
+            {
+                throw new KeyNotFoundException("Comment not found");
+            }
+
+            await commentRepository.DeleteCommentAsync(id);
+        }
+    }
+}

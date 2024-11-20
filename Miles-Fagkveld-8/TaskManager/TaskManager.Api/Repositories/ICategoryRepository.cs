@@ -1,13 +1,13 @@
-using TaskManager.Api.Models;
+using TaskManager.Api.Data;
 
 namespace TaskManager.Api.Repositories
 {
     public interface ICategoryRepository
     {
-        Task<IEnumerable<Category>> GetCategoriesAsync();
-        Task<Category> GetCategoryByIdAsync(int id);
-        Task AddCategoryAsync(Category category);
-        Task UpdateCategoryAsync(Category category);
+        Task<IEnumerable<CategoryDto>> GetCategoriesAsync();
+        Task<CategoryDto> GetCategoryByIdAsync(int id);
+        Task AddCategoryAsync(CategoryDto CategoryDto);
+        Task UpdateCategoryAsync(CategoryDto CategoryDto);
         Task DeleteCategoryAsync(int id);
         Task<bool> CategoryExistsAsync(int id);
     }

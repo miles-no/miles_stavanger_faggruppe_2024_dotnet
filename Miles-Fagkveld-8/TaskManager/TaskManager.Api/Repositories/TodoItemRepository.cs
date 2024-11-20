@@ -1,28 +1,27 @@
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Api.Data;
-using TaskManager.Api.Models;
 
 namespace TaskManager.Api.Repositories
 {
     public class TodoItemRepository(TaskManagerContext context) : ITodoItemRepository
     {
-        public async Task<IEnumerable<TodoItem>> GetTodoItemsAsync()
+        public async Task<IEnumerable<TodoItemDto>> GetTodoItemsAsync()
         {
             return await context.TodoItems.ToListAsync();
         }
 
-        public async Task<TodoItem> GetTodoItemAsync(int id)
+        public async Task<TodoItemDto> GetTodoItemAsync(int id)
         {
             return await context.TodoItems.FindAsync(id);
         }
 
-        public async Task AddTodoItemAsync(TodoItem todoItem)
+        public async Task AddTodoItemAsync(TodoItemDto todoItem)
         {
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
         }
 
-        public async Task UpdateTodoItemAsync(TodoItem todoItem)
+        public async Task UpdateTodoItemAsync(TodoItemDto todoItem)
         {
             context.Entry(todoItem).State = EntityState.Modified;
             await context.SaveChangesAsync();

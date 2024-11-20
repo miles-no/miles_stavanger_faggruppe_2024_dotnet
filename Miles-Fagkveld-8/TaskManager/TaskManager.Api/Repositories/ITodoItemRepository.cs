@@ -1,13 +1,13 @@
-using TaskManager.Api.Models;
+using TaskManager.Api.Data;
 
 namespace TaskManager.Api.Repositories
 {
     public interface ITodoItemRepository
     {
-        Task<IEnumerable<TodoItem>> GetTodoItemsAsync();
-        Task<TodoItem> GetTodoItemAsync(int id);
-        Task AddTodoItemAsync(TodoItem todoItem);
-        Task UpdateTodoItemAsync(TodoItem todoItem);
+        Task<IEnumerable<TodoItemDto>> GetTodoItemsAsync();
+        Task<TodoItemDto> GetTodoItemAsync(int id);
+        Task AddTodoItemAsync(TodoItemDto todoItem);
+        Task UpdateTodoItemAsync(TodoItemDto todoItem);
         Task DeleteTodoItemAsync(int id);
         Task<bool> TodoItemExistsAsync(int id);
     }

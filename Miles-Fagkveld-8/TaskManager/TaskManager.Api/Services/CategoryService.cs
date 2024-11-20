@@ -1,4 +1,5 @@
-﻿using TaskManager.Api.Models;
+﻿using TaskManager.Api.Data;
+using TaskManager.Api.Models;
 using TaskManager.Api.Repositories;
 
 namespace TaskManager.Api.Services
@@ -7,17 +8,35 @@ namespace TaskManager.Api.Services
     {
         public async Task<IEnumerable<Category>> GetCategoriesAsync()
         {
-            return await categoryRepository.GetCategoriesAsync();
+            var categoryDtos = await categoryRepository.GetCategoriesAsync();
+            return categoryDtos.Select(dto => new Category
+            {
+                Id = dto.Id,
+                Name = dto.Name
+                // Map other properties as needed
+            });
         }
 
         public async Task<Category> GetCategoryByIdAsync(int id)
         {
-            return await categoryRepository.GetCategoryByIdAsync(id);
+            var categoryDto = await categoryRepository.GetCategoryByIdAsync(id);
+            return new Category
+            {
+                Id = categoryDto.Id,
+                Name = categoryDto.Name
+                // Map other properties as needed
+            };
         }
 
         public async Task AddCategoryAsync(Category category)
         {
-            await categoryRepository.AddCategoryAsync(category);
+            var categoryDto = new CategoryDto
+            {
+                Id = category.Id,
+                Name = category.Name
+                // Map other properties as needed
+            };
+            await categoryRepository.AddCategoryAsync(categoryDto);
         }
 
         public async Task UpdateCategoryAsync(int id, Category category)
@@ -32,7 +51,14 @@ namespace TaskManager.Api.Services
                 throw new KeyNotFoundException("Category not found");
             }
 
-            await categoryRepository.UpdateCategoryAsync(category);
+            var categoryDto = new CategoryDto
+            {
+                Id = category.Id,
+                Name = category.Name
+                // Map other properties as needed
+            };
+
+            await categoryRepository.UpdateCategoryAsync(categoryDto);
         }
 
         public async Task DeleteCategoryAsync(int id)
