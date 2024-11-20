@@ -6,23 +6,23 @@ namespace TaskManager.Api.Repositories;
 public class CommentRepository(TaskManagerContext context) : ICommentRepository
 {
 
-    public async Task<IEnumerable<CommentDto>> GetCommentsAsync(int todoItemId)
+    public async Task<IEnumerable<CommentEntity>> GetCommentsAsync(int todoItemId)
     {
-        return await context.Comments.Where(c => c.TodoListItemId == todoItemId).ToListAsync();
+        return await context.Comments.Where(c => c.TodoItemId == todoItemId).ToListAsync();
     }
 
-    public async Task<CommentDto> GetCommentAsync(Guid id)
+    public async Task<CommentEntity> GetCommentAsync(Guid id)
     {
         return await context.Comments.FindAsync(id);
     }
 
-    public async Task AddCommentAsync(CommentDto comment)
+    public async Task AddCommentAsync(CommentEntity comment)
     {
         context.Comments.Add(comment);
         await context.SaveChangesAsync();
     }
 
-    public async Task UpdateCommentAsync(CommentDto comment)
+    public async Task UpdateCommentAsync(CommentEntity comment)
     {
         context.Entry(comment).State = EntityState.Modified;
         await context.SaveChangesAsync();

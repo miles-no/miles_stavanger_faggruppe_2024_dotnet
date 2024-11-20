@@ -5,23 +5,23 @@ namespace TaskManager.Api.Repositories
 {
     public class TodoItemRepository(TaskManagerContext context) : ITodoItemRepository
     {
-        public async Task<IEnumerable<TodoItemDto>> GetTodoItemsAsync()
+        public async Task<IEnumerable<TodoItemEntity>> GetTodoItemsAsync()
         {
             return await context.TodoItems.Include(t => t.Category).ToListAsync();
         }
 
-        public async Task<TodoItemDto> GetTodoItemAsync(int id)
+        public async Task<TodoItemEntity> GetTodoItemAsync(int id)
         {
             return await context.TodoItems.FindAsync(id);
         }
 
-        public async Task AddTodoItemAsync(TodoItemDto todoItem)
+        public async Task AddTodoItemAsync(TodoItemEntity todoItem)
         {
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
         }
 
-        public async Task UpdateTodoItemAsync(TodoItemDto todoItem)
+        public async Task UpdateTodoItemAsync(TodoItemEntity todoItem)
         {
             context.Entry(todoItem).State = EntityState.Modified;
             await context.SaveChangesAsync();

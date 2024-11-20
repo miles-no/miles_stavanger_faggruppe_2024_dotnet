@@ -5,34 +5,34 @@ namespace TaskManager.Api.Repositories
 {
     public class CategoryRepository(TaskManagerContext context) : ICategoryRepository
     {
-        public async Task<IEnumerable<CategoryDto>> GetCategoriesAsync()
+        public async Task<IEnumerable<CategoryEntity>> GetCategoriesAsync()
         {
             return await context.Categories.ToListAsync();
         }
 
-        public async Task<CategoryDto> GetCategoryByIdAsync(Guid id)
+        public async Task<CategoryEntity> GetCategoryByIdAsync(Guid id)
         {
             return await context.Categories.FindAsync(id);
         }
 
-        public async Task AddCategoryAsync(CategoryDto CategoryDto)
+        public async Task AddCategoryAsync(CategoryEntity categoryEntity)
         {
-            context.Categories.Add(CategoryDto);
+            context.Categories.Add(categoryEntity);
             await context.SaveChangesAsync();
         }
 
-        public async Task UpdateCategoryAsync(CategoryDto CategoryDto)
+        public async Task UpdateCategoryAsync(CategoryEntity categoryEntity)
         {
-            context.Entry(CategoryDto).State = EntityState.Modified;
+            context.Entry(categoryEntity).State = EntityState.Modified;
             await context.SaveChangesAsync();
         }
 
         public async Task DeleteCategoryAsync(Guid id)
         {
-            var CategoryDto = await context.Categories.FindAsync(id);
-            if (CategoryDto != null)
+            var categoryEntity = await context.Categories.FindAsync(id);
+            if (categoryEntity != null)
             {
-                context.Categories.Remove(CategoryDto);
+                context.Categories.Remove(categoryEntity);
                 await context.SaveChangesAsync();
             }
         }

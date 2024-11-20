@@ -8,48 +8,48 @@ namespace TaskManager.Api.Services
     {
         public async Task<IEnumerable<TodoItem>> GetTodoItemsAsync()
         {
-            var todoItemDtos = await repository.GetTodoItemsAsync();
-            return todoItemDtos.Select(dto => new TodoItem
+            var todoItemEntities = await repository.GetTodoItemsAsync();
+            return todoItemEntities.Select(entity => new TodoItem
             {
-                Id = dto.Id,
-                Name = dto.Name,
-                IsComplete = dto.IsComplete,
-                CategoryId = dto.Category?.Id,
+                Id = entity.Id,
+                Name = entity.Name,
+                IsComplete = entity.IsComplete,
+                CategoryId = entity.Category?.Id,
             });
         }
 
         public async Task<TodoItem> GetTodoItemAsync(int id)
         {
-            var dto = await repository.GetTodoItemAsync(id);
+            var entity = await repository.GetTodoItemAsync(id);
             return new TodoItem
             {
-                Id = dto.Id,
-                Name = dto.Name,
-                IsComplete = dto.IsComplete
+                Id = entity.Id,
+                Name = entity.Name,
+                IsComplete = entity.IsComplete
             };
         }
 
         public async Task AddTodoItemAsync(TodoItem todoItem)
         {
-            var dto = new TodoItemDto
+            var entity = new TodoItemEntity
             {
                 Id = todoItem.Id,
                 Name = todoItem.Name,
                 IsComplete = todoItem.IsComplete,
                 CategoryId = todoItem.CategoryId
             };
-            await repository.AddTodoItemAsync(dto);
+            await repository.AddTodoItemAsync(entity);
         }
 
         public async Task UpdateTodoItemAsync(TodoItem todoItem)
         {
-            var dto = new TodoItemDto
+            var entity = new TodoItemEntity
             {
                 Id = todoItem.Id,
                 Name = todoItem.Name,
                 IsComplete = todoItem.IsComplete
             };
-            await repository.UpdateTodoItemAsync(dto);
+            await repository.UpdateTodoItemAsync(entity);
         }
 
         public async Task DeleteTodoItemAsync(int id)

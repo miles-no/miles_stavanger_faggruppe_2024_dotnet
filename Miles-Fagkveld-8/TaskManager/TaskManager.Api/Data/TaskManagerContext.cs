@@ -4,10 +4,10 @@ namespace TaskManager.Api.Data
 {
     public class TaskManagerContext(DbContextOptions<TaskManagerContext> options) : DbContext(options)
     {
-        public DbSet<TodoItemDto> TodoItems { get; set; } = null!;
+        public DbSet<TodoItemEntity> TodoItems { get; set; } = null!;
 
-        public DbSet<CategoryDto> Categories { get; set; } = null!;
+        public DbSet<CategoryEntity> Categories { get; set; } = null!;
 
-        public DbSet<CommentDto> Comments { get; set; } = null!;
+        public DbSet<CommentEntity> Comments { get; set; } = null!;
     }
 }

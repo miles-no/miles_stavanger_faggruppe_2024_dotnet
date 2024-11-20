@@ -8,36 +8,36 @@ namespace TaskManager.Api.Services
     {
         public async Task<IEnumerable<Comment>> GetCommentsAsync(int todoListItemId)
         {
-            var commentDtos = await commentRepository.GetCommentsAsync(todoListItemId);
-            return commentDtos.Select(dto => new Comment
+            var commentEntities = await commentRepository.GetCommentsAsync(todoListItemId);
+            return commentEntities.Select(entity => new Comment
             {
-                Id = dto.Id,
-                Text = dto.Text
+                Id = entity.Id,
+                Text = entity.Text
                 // Map other properties as needed
             });
         }
 
         public async Task<Comment> GetCommentAsync(Guid id)
         {
-            var commentDto = await commentRepository.GetCommentAsync(id);
+            var commentEntity = await commentRepository.GetCommentAsync(id);
             return new Comment
             {
-                Id = commentDto.Id,
-                Text = commentDto.Text
+                Id = commentEntity.Id,
+                Text = commentEntity.Text
                 // Map other properties as needed
             };
         }
 
         public async Task AddCommentAsync(int todoListItemId, CreateComment comment)
         {
-            var commentDto = new CommentDto
+            var commentEntity = new CommentEntity
             {
                 Id = Guid.NewGuid(),
                 Text = comment.Text,
-                TodoListItemId = todoListItemId
+                TodoItemId = todoListItemId
             };
 
-            await commentRepository.AddCommentAsync(commentDto);
+            await commentRepository.AddCommentAsync(commentEntity);
         }
 
         public async Task UpdateCommentAsync(Guid id, Comment comment)
@@ -52,14 +52,14 @@ namespace TaskManager.Api.Services
                 throw new KeyNotFoundException("Comment not found");
             }
 
-            var commentDto = new CommentDto
+            var commentEntity = new CommentEntity
             {
                 Id = comment.Id,
                 Text = comment.Text
                 // Map other properties as needed
             };
 
-            await commentRepository.UpdateCommentAsync(commentDto);
+            await commentRepository.UpdateCommentAsync(commentEntity);
         }
 
         public async Task DeleteCommentAsync(Guid id)

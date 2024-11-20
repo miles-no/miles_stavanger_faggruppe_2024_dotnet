@@ -8,35 +8,35 @@ namespace TaskManager.Api.Services
     {
         public async Task<IEnumerable<Category>> GetCategoriesAsync()
         {
-            var categoryDtos = await categoryRepository.GetCategoriesAsync();
-            return categoryDtos.Select(dto => new Category
+            var categoryEntities = await categoryRepository.GetCategoriesAsync();
+            return categoryEntities.Select(entity => new Category
             {
-                Id = dto.Id,
-                Name = dto.Name
+                Id = entity.Id,
+                Name = entity.Name
                 // Map other properties as needed
             });
         }
 
         public async Task<Category> GetCategoryByIdAsync(Guid id)
         {
-            var categoryDto = await categoryRepository.GetCategoryByIdAsync(id);
+            var categoryEntity = await categoryRepository.GetCategoryByIdAsync(id);
             return new Category
             {
-                Id = categoryDto.Id,
-                Name = categoryDto.Name
+                Id = categoryEntity.Id,
+                Name = categoryEntity.Name
                 // Map other properties as needed
             };
         }
 
         public async Task AddCategoryAsync(CreateCategory category)
         {
-            var categoryDto = new CategoryDto
+            var categoryEntity = new CategoryEntity
             {
                 Id = Guid.NewGuid(),
                 Name = category.Name
                 // Map other properties as needed
             };
-            await categoryRepository.AddCategoryAsync(categoryDto);
+            await categoryRepository.AddCategoryAsync(categoryEntity);
         }
 
         public async Task UpdateCategoryAsync(Guid id, Category category)
@@ -51,14 +51,14 @@ namespace TaskManager.Api.Services
                 throw new KeyNotFoundException("Category not found");
             }
 
-            var categoryDto = new CategoryDto
+            var categoryEntity = new CategoryEntity
             {
                 Id = category.Id,
                 Name = category.Name
                 // Map other properties as needed
             };
 
-            await categoryRepository.UpdateCategoryAsync(categoryDto);
+            await categoryRepository.UpdateCategoryAsync(categoryEntity);
         }
 
         public async Task DeleteCategoryAsync(Guid id)
