@@ -1,3 +1,4 @@
+using FastEndpoints;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Api.Data;
 using TaskManager.Api.Infrastructure;
@@ -28,6 +29,8 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddFastEndpoints();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -42,5 +45,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseFastEndpoints();
 
 app.Run();
