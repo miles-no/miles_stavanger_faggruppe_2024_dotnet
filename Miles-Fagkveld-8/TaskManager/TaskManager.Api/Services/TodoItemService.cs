@@ -29,7 +29,7 @@ namespace TaskManager.Api.Services
             };
         }
 
-        public async Task AddTodoItemAsync(TodoItem todoItem)
+        public async Task<TodoItem> AddTodoItemAsync(TodoItem todoItem)
         {
             var entity = new TodoItemEntity
             {
@@ -38,7 +38,16 @@ namespace TaskManager.Api.Services
                 IsComplete = todoItem.IsComplete,
                 CategoryId = todoItem.CategoryId
             };
+            
             await repository.AddTodoItemAsync(entity);
+
+            return new TodoItem
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                IsComplete = entity.IsComplete,
+                CategoryId = entity.CategoryId
+            };
         }
 
         public async Task UpdateTodoItemAsync(TodoItem todoItem)
