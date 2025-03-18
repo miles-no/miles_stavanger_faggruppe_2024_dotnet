@@ -7,15 +7,13 @@ namespace TaskManager.Api.Features.TodoItem.AddTodoItem
     {
         public override void Configure()
         {
-            Post("/api/todoitems/v2/create");
+            Post("/api/todoitems");
             AllowAnonymous();
         }
 
         public override async Task HandleAsync(AddTodoItemRequest req, CancellationToken ct)
         {
-            var todoItem = Map.ToEntity(req);
-            await todoItemService.AddTodoItemAsync(todoItem);
-
+            var todoItem = await todoItemService.AddTodoItemAsync(Map.ToEntity(req));
             await SendAsync(Map.FromEntity(todoItem), cancellation: ct);
         }
     }
